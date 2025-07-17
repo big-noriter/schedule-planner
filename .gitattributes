@@ -1,0 +1,32 @@
+# Git Attributes for Security
+# 특정 파일 타입의 처리 방식을 정의합니다.
+
+# 환경변수 파일은 절대 Git LFS에 저장하지 않음
+*.env filter= diff= merge=
+.env* filter= diff= merge=
+
+# 바이너리 파일로 취급하여 diff를 방지
+*.key binary
+*.pem binary
+*.p12 binary
+*.pfx binary
+*.db binary
+*.sqlite binary
+*.pdf binary
+
+# 텍스트 파일의 줄 끝 정규화
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# 특정 파일들은 linguist에서 제외 (GitHub 언어 통계에서 제외)
+*.map linguist-generated=true
+*.min.js linguist-generated=true
+*.min.css linguist-generated=true
+package-lock.json linguist-generated=true
+yarn.lock linguist-generated=true 
