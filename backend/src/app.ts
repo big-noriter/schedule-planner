@@ -36,7 +36,9 @@ const corsOptions = {
       ].filter((url): url is string => Boolean(url))
     : ['http://localhost:3000', 'http://localhost:8000'], // 개발 환경에서 두 포트 허용
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
 app.use(cors(corsOptions));
 
