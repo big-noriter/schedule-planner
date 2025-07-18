@@ -2,7 +2,7 @@
   "name": "schedule-manager-backend",
   "version": "1.0.0",
   "description": "일정 관리 시스템 백엔드 API",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
