@@ -7,10 +7,10 @@ export const getApiBaseUrl = (): string => {
     return process.env.NEXT_PUBLIC_API_URL;
   }
   
-  // 2. Railway 환경 감지
+  // 2. Railway 환경 감지 (Vercel 배포 환경)
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    if (hostname.includes('railway.app') || hostname.includes('schedule-planner')) {
+    if (hostname.includes('vercel.app') || hostname.includes('schedule-planner')) {
       return 'https://schedule-planner-backend.up.railway.app';
     }
   }

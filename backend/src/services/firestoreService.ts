@@ -254,13 +254,33 @@ export const firestoreService = {
     company: CompanySchedule[];
   }> {
     try {
+      console.log('🔍 개별 일정 타입별 조회 시작...');
+      
       const [personal, department, project, company] = await Promise.all([
-        this.getPersonalSchedules(),
-        this.getDepartmentSchedules(),
-        this.getProjectSchedules(),
-        this.getCompanySchedules()
+        this.getPersonalSchedules().catch(err => {
+          console.error('개인 일정 조회 실패:', err);
+          return [];
+        }),
+        this.getDepartmentSchedules().catch(err => {
+          console.error('부서 일정 조회 실패:', err);
+          return [];
+        }),
+        this.getProjectSchedules().catch(err => {
+          console.error('프로젝트 일정 조회 실패:', err);
+          return [];
+        }),
+        this.getCompanySchedules().catch(err => {
+          console.error('회사 일정 조회 실패:', err);
+          return [];
+        })
       ]);
 
+      console.log('✅ 개별 일정 조회 완료:', {
+        personal: personal.length,
+        department: department.length,
+        project: project.length,
+        company: company.length
+      });
 
       return {
         personal,
@@ -269,8 +289,8 @@ export const firestoreService = {
         company
       };
     } catch (error) {
-      console.error('전체 일정 조회 실패:', error);
-      throw new Error('전체 일정을 조회하는 중 오류가 발생했습니다.');
+      console.error('❌ 전체 일정 조회 실패:', error);
+      throw new Error(`전체 일정을 조회하는 중 오류가 발생했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
     }
   },
 

@@ -68,25 +68,34 @@ export const scheduleController = {
   // 모든 일정 조회 (통합)
   async getAllSchedules(_req: Request, res: Response) {
     try {
+      console.log('🔍 전체 일정 조회 시작...');
       const allSchedules = await firestoreService.getAllSchedules();
+      console.log('✅ 전체 일정 조회 성공:', {
+        personal: allSchedules.personal?.length || 0,
+        department: allSchedules.department?.length || 0,
+        project: allSchedules.project?.length || 0,
+        company: allSchedules.company?.length || 0
+      });
       
       res.status(200).json({
         success: true,
         data: allSchedules,
         message: '전체 일정 목록 조회 성공',
         count: {
-          personal: allSchedules.personal.length,
-          department: allSchedules.department.length,
-          project: allSchedules.project.length,
-          total: allSchedules.personal.length + allSchedules.department.length + allSchedules.project.length
+          personal: allSchedules.personal?.length || 0,
+          department: allSchedules.department?.length || 0,
+          project: allSchedules.project?.length || 0,
+          company: allSchedules.company?.length || 0,
+          total: (allSchedules.personal?.length || 0) + (allSchedules.department?.length || 0) + (allSchedules.project?.length || 0) + (allSchedules.company?.length || 0)
         }
       });
     } catch (error) {
-      console.error('전체 일정 조회 실패:', error);
+      console.error('❌ 전체 일정 조회 실패:', error);
       res.status(500).json({
         success: false,
         error: '전체 일정을 조회하는 중 오류가 발생했습니다.',
-        message: error instanceof Error ? error.message : '알 수 없는 오류'
+        message: error instanceof Error ? error.message : '알 수 없는 오류',
+        details: process.env['NODE_ENV'] === 'development' ? error : undefined
       });
     }
   },

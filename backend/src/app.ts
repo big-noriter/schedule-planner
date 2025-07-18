@@ -29,18 +29,32 @@ app.use(express.urlencoded({ extended: true })); // URL 인코딩 파싱
 
 // CORS 설정
 const corsOptions = {
-  origin: process.env['NODE_ENV'] === 'production' 
-    ? [
-        'https://schedule-planner-lake.vercel.app',
-        process.env['FRONTEND_URL']
-      ].filter((url): url is string => Boolean(url))
-    : ['http://localhost:3000', 'http://localhost:8000'], // 개발 환경에서 두 포트 허용
+  origin: (origin, callback) => {
+    const allowedOrigins = process.env['NODE_ENV'] === 'production' 
+      ? [
+          'https://schedule-planner-lake.vercel.app',
+          process.env['FRONTEND_URL']
+        ].filter((url): url is string => Boolean(url))
+      : ['http://localhost:3000', 'http://localhost:8000']; // 개발 환경에서 두 포트 허용
+    
+    // origin이 undefined인 경우 (Postman, 모바일 앱 등) 허용
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('CORS 차단된 Origin:', origin);
+      callback(new Error('CORS 정책에 의해 차단되었습니다.'));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Content-Length', 'Content-Type']
 };
 app.use(cors(corsOptions));
+
+// OPTIONS 요청에 대한 명시적 핸들링
+app.options('*', cors(corsOptions));
 
 // Rate Limiting 설정
 const limiter = rateLimit({
